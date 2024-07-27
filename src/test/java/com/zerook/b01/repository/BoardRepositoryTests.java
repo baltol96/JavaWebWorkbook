@@ -1,6 +1,7 @@
 package com.zerook.b01.repository;
 
 import com.zerook.b01.domain.Board;
+import com.zerook.b01.dto.BoardListReplyCountDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,6 +128,29 @@ public class BoardRepositoryTests {
         Pageable pageable = PageRequest.of(1,10, Sort.by("bno").descending());
 
         Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
+
+        log.info(result.getTotalPages());
+
+        log.info(result.getSize());
+
+        log.info(result.getNumber());
+
+        log.info(result.hasPrevious() + " : " + result.hasNext());
+
+        result.getContent().forEach(board -> log.info(board));
+
+    }
+
+    @Test
+    public void testSearchReplyCount() {
+
+        String[] types = {"t", "c", "w"};
+
+        String keyword = "101";
+
+        Pageable pageable = PageRequest.of(0,10, Sort.by("bno").descending());
+
+        Page<BoardListReplyCountDTO> result = boardRepository.searchWithReply(types, keyword, pageable);
 
         log.info(result.getTotalPages());
 
