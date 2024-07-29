@@ -2,6 +2,7 @@ package com.zerook.b01.controller;
 
 
 import com.zerook.b01.dto.BoardDTO;
+import com.zerook.b01.dto.BoardListReplyCountDTO;
 import com.zerook.b01.dto.PageRequestDTO;
 import com.zerook.b01.dto.PageResponseDTO;
 import com.zerook.b01.service.BoardService;
@@ -27,7 +28,11 @@ public class BoardController {
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model){
 
-        PageResponseDTO responseDTO = boardService.list(pageRequestDTO);
+        //PageResponseDTO responseDTO = boardService.list(pageRequestDTO);
+
+        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
+
+        log.info(responseDTO);
 
         model.addAttribute("responseDTO", responseDTO);
 

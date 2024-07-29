@@ -2,6 +2,7 @@ package com.zerook.b01.service;
 
 import com.zerook.b01.domain.Board;
 import com.zerook.b01.dto.BoardDTO;
+import com.zerook.b01.dto.BoardListReplyCountDTO;
 import com.zerook.b01.dto.PageRequestDTO;
 import com.zerook.b01.dto.PageResponseDTO;
 import com.zerook.b01.repository.BoardRepository;
@@ -86,6 +87,23 @@ public class BoardServiceImpl implements BoardService {
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)
                 .total((int)result.getTotalElements())
+                .build();
+
+    }
+
+    @Override
+    public PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO){
+
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("bno");
+
+        Page<BoardListReplyCountDTO> result = boardRepository.searchWithReply(types, keyword, pageable);
+
+        return PageResponseDTO.<BoardListReplyCountDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(result.getContent())
+                .total((int) result.getTotalElements())
                 .build();
 
     }
