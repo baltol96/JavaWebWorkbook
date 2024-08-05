@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/basic.html}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html" layout:decorate="~{layout/basic.html}">
 <head>
     <title>Board Read</title>
 </head>
@@ -50,11 +51,81 @@
             </div>
         </div>
     </div>
+
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="my-4">
+                <button class="btn btn-info addReplyBtn">ADD REPLY</button>
+            </div>
+            <ul class="list-group replyList"></ul>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <ul class="pagination replyPaging"></ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="/js/reply.js"></script>
+
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
 
+    const bno = [[${dto.bno}]]
 
+    const replyList = document.querySelector('.replyList')
+    const replyPageing = document.querySelector('.replyPaging')
+
+    function printList(dtoList){
+        let str = '';
+
+        if (dtoList && dtoList.length > 0){
+            for (const dto of dtoList){
+                str += `<li class="list-group-item d-flex replyItem">
+                        <span class="col-2">${dto.rno}</span>
+                        <span class="col-6" data-rno=${dto.rno}>${dto.replyText}</span>
+                        <span class="col-2">${dto.replyer}</span>
+                        <span class="col-2">${dto.regDate}</span>`
+            }
+        }
+        replyList.innerHTML = str
+    }
+
+    function printPages(data){
+
+        let pageStr = '';
+
+        if(data.prev){
+            pageStr += `<li class="page-item"><a class="page-link" data-page="${data.start-1}">PREV</a></li>`
+        }
+
+        for(let i = data.start; i <= data.end; i++){
+            pageStr += `<li class="page-item ${i == data.page?"active":""}"><a class="page-link" data-page="${i}">${i}</a></li>`
+        }
+
+        if(data.next){
+            pageStr = `<li class="page-item"><a class="page-link" data-page="${data.end+1}">PREV</a></li>`
+        }
+        replyPageing.innerHTML = pageStr
+    }
+
+    function printReplies(page,size,goLast){
+
+        getList({bno, page, size, goLast}).then(
+            data =>{
+                printList(data.dtoList)
+                printPages(data)
+            }
+        ).catch(e => {
+            console.error(e)
+        })
+
+    }
+
+    printReplies(1,10,true)
 
 </script>
 
