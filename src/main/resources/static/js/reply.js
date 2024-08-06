@@ -11,3 +11,18 @@ async function getList({bno, page, size, goLast}){
     return result.data
 
 }
+
+async function addReply(replyObj){
+    const response = await axios.post(`/replies/`, replyObj)
+    return response.data
+}
+
+async function getReply(rno){
+    const response = await axios.get(`/replies/${rno}`)
+    return response.data
+}
+
+async function modifyReply(replyObj){
+    const response = await axios.put(`/replies/${replyObj}`, replyObj)
+    return response.data
+}
